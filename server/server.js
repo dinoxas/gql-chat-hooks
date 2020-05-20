@@ -24,11 +24,18 @@ app.use(
 const typeDefs = fs.readFileSync('./schema.graphql', { encoding: 'utf8' });
 const resolvers = require('./resolvers');
 
-function context({ req }) {
+// req is set by expressJwt middleware
+function context({ req, connection }) {
   if (req && req.user) {
+    // returns context ojb with userId
     return { userId: req.user.sub };
   }
-  return {};
+  // checks if its a websocket connection
+  if (connection && connection.context && connection.context.accessToken) {
+    const decodedToken = jwt.verify(connection.context.accessToken, jwtSecret);
+    // returns context ojb with userId
+    return { userId: decodedToken.sub };
+  }
 }
 
 const apolloServer = new ApolloServer({ typeDefs, resolvers, context });
