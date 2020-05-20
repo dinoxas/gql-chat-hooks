@@ -44,7 +44,7 @@ export async function getMessages() {
   return data.messages;
 }
 
-export async function onMessageAdded(handleMessage) {
+export function onMessageAdded(handleMessage) {
   // start subscription - initiate gql subscription with the server
   // server sends messages to the client over websocket
   const observable = client.subscribe({ query: messageAddedSubscription });
