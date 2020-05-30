@@ -1,7 +1,6 @@
 import gql from 'graphql-tag';
-import client from './client';
 
-const messagesQuery = gql`
+export const messagesQuery = gql`
   query MessagesQuery {
     messages {
       id
@@ -11,7 +10,7 @@ const messagesQuery = gql`
   }
 `;
 
-const addMessageMutation = gql`
+export const addMessageMutation = gql`
   mutation AddMessageMutation($input: MessageInput!) {
     message: addMessage(input: $input) {
       id
@@ -21,7 +20,7 @@ const addMessageMutation = gql`
   }
 `;
 
-const messageAddedSubscription = gql`
+export const messageAddedSubscription = gql`
   subscription {
     messageAdded {
       id
@@ -30,24 +29,3 @@ const messageAddedSubscription = gql`
     }
   }
 `;
-
-export async function addMessage(text) {
-  const { data } = await client.mutate({
-    mutation: addMessageMutation,
-    variables: { input: { text } }
-  });
-  return data.message;
-}
-
-export async function getMessages() {
-  const { data } = await client.query({ query: messagesQuery });
-  return data.messages;
-}
-
-export function onMessageAdded(handleMessage) {
-  // start subscription - initiate gql subscription with the server
-  // server sends messages to the client over websocket
-  const observable = client.subscribe({ query: messageAddedSubscription });
-  // used to dispatche messages to component
-  return observable.subscribe(({ data }) => handleMessage(data.messageAdded));
-}
