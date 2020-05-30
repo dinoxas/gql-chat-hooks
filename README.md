@@ -1,3 +1,3 @@
-# GraphQL Chat Sample
+## Chat application using React and GraphQL
 
-Sample application used in the [GraphQL by Example](https://bit.ly/graphql-by-example) course.
+Refactored the "gql-chat" project using React Hooks and @apollo/react-hooks
